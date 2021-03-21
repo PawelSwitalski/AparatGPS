@@ -1,4 +1,10 @@
 package com.main.aparatgps;
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.media.ExifInterface;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,10 +31,8 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.Toast;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -37,7 +41,7 @@ import java.util.concurrent.Executors;
 import static androidx.camera.core.VideoCapture.*;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     static Button btnClose, btnLens, btnVideo, btnStop, btnPhoto;
 
@@ -47,19 +51,56 @@ public class MainActivity extends AppCompatActivity {
 
     private int REQUEST_CODE_PERMISSIONS = 1001;
     private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA",
-            "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.RECORD_AUDIO"};
+            "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.RECORD_AUDIO",
+            "android.permission.ACCESS_FINE_LOCATION", "android.permission.INTERNET",
+            "android.permission.ACCESS_COARSE_LOCATION"};
 
+    private LocationManager locationManager;
+
+    private String locationStr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (allPermissionsGranted()) {
+            startGPS();
             startCamera();
         } else {
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS,
                     REQUEST_CODE_PERMISSIONS);
         }
+    }
+
+    private void startGPS() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // GPS methods
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 1, new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                String str = "Latitude: "+location.getLatitude()+" Longitude: "+location.getLongitude();
+                //Toast.makeText(getApplicationContext(), str, Toast.LENGTH_LONG);
+                locationStr = str;
+                // TODO Add better localisation info
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        });
     }
 
 
@@ -171,6 +212,9 @@ public class MainActivity extends AppCompatActivity {
         btnLens.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // TODO delete logs
+                Log.e("info", "Log działa");
+                Log.e("Localisation info", locationStr);
                 if (mCameraView.isRecording()) {
                     return;
                 }
@@ -342,6 +386,24 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     } //write end
+
+
+
+
+    public void createEXIF(File file){
+        /*
+        try{
+            ExifInterface exif = new ExifInterface(file.getAbsolutePath());
+            exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE, mGpsLocation.getLatDms());
+            exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, mGpsLocation.getLonDms());
+            exif.setAttribute(ExifInterface.TAG_GPS_ALTITUDE, mGpsLocation.getAltDms());
+            exif.saveAttributes();
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+        */
+
+    }
 
 
 }//Main activity end
