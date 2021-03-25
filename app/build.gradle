@@ -44,4 +44,8 @@ dependencies {
     implementation "androidx.camera:camera-view:1.0.0-alpha15"
     // If you want to additionally use the CameraX Extensions library
     implementation "androidx.camera:camera-extensions:1.0.0-alpha15"
+
+    // EXIF
+    implementation "org.apache.commons:commons-imaging:1.0-alpha2"
+    implementation "commons-io:commons-io:2.6"
 }

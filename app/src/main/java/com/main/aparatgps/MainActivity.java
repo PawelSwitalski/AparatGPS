@@ -58,6 +58,8 @@ public class MainActivity extends AppCompatActivity{
     private LocationManager locationManager;
 
     private String locationStr;
+    private double latitude;
+    private double longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,8 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onLocationChanged(Location location) {
                 String str = "Latitude: "+location.getLatitude()+" Longitude: "+location.getLongitude();
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
                 //Toast.makeText(getApplicationContext(), str, Toast.LENGTH_LONG);
                 locationStr = str;
                 // TODO Add better localisation info
