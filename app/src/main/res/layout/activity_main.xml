@@ -52,4 +52,14 @@
             android:layout_height="wrap_content"
             android:layout_width="96dp"/>
 
+    <Button
+        android:id="@+id/btnGallery"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="GALLERY"
+        android:layout_height="wrap_content"
+        android:layout_width="96dp"
+        android:minHeight="95dp"
+        />
+
 </RelativeLayout>

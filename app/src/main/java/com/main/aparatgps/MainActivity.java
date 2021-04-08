@@ -33,6 +33,7 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.io.*;
@@ -47,7 +48,7 @@ import static androidx.camera.core.VideoCapture.*;
 
 public class MainActivity extends AppCompatActivity {
 
-    static Button btnClose, btnLens, btnVideo, btnStop, btnPhoto;
+    static Button btnClose, btnLens, btnVideo, btnStop, btnPhoto, btnGallery;
 
     private Executor executor = Executors.newSingleThreadExecutor();
     CameraSelector cameraSelector;
@@ -128,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
         btnStop = findViewById(R.id.btnStop);
         btnLens = findViewById(R.id.btnLens);
         btnClose = findViewById(R.id.btnClose);
+        btnGallery = findViewById(R.id.btnGallery);
         mCameraView = findViewById(R.id.view_finder);
         mCameraView.setFlash(ImageCapture.FLASH_MODE_AUTO);
         //can set flash mode to auto,on,off...
@@ -153,6 +155,14 @@ public class MainActivity extends AppCompatActivity {
         mCameraView.bindToLifecycle((LifecycleOwner) MainActivity.this);
 
         // set click listener to all buttons
+
+        btnGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
+                startActivity(intent);
+            }
+        });
 
         btnPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
