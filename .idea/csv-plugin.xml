@@ -24,6 +24,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\app\src\test\java\com\main\aparatgps\WriteExifMetadataTest.java">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
       </map>
     </option>
   </component>
