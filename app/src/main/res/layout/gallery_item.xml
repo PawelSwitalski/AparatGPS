@@ -7,8 +7,8 @@
     android:padding="1dp">
 
     <ImageView
-        android:layout_height="0dp"
-        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_width="90dp"
         android:scaleType="centerCrop"
         android:contentDescription="@string/gallery_name"
         android:id="@+id/image"
