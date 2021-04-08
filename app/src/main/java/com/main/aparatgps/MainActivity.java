@@ -1,10 +1,12 @@
 package com.main.aparatgps;
+
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.ExifInterface;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +19,7 @@ import androidx.camera.view.CameraView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
+
 import android.Manifest;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -30,6 +33,7 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.io.*;
@@ -38,12 +42,13 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
 import static androidx.camera.core.VideoCapture.*;
 
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
-    static Button btnClose, btnLens, btnVideo, btnStop, btnPhoto;
+    static Button btnClose, btnLens, btnVideo, btnStop, btnPhoto, btnGallery;
 
     private Executor executor = Executors.newSingleThreadExecutor();
     CameraSelector cameraSelector;
@@ -78,10 +83,20 @@ public class MainActivity extends AppCompatActivity{
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         // GPS methods
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 1, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                String str = "Latitude: "+location.getLatitude()+" Longitude: "+location.getLongitude();
+                String str = "Latitude: " + location.getLatitude() + " Longitude: " + location.getLongitude();
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
                 //Toast.makeText(getApplicationContext(), str, Toast.LENGTH_LONG);
@@ -114,6 +129,7 @@ public class MainActivity extends AppCompatActivity{
         btnStop = findViewById(R.id.btnStop);
         btnLens = findViewById(R.id.btnLens);
         btnClose = findViewById(R.id.btnClose);
+        btnGallery = findViewById(R.id.btnGallery);
         mCameraView = findViewById(R.id.view_finder);
         mCameraView.setFlash(ImageCapture.FLASH_MODE_AUTO);
         //can set flash mode to auto,on,off...
@@ -139,6 +155,14 @@ public class MainActivity extends AppCompatActivity{
         mCameraView.bindToLifecycle((LifecycleOwner) MainActivity.this);
 
         // set click listener to all buttons
+
+        btnGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
+                startActivity(intent);
+            }
+        });
 
         btnPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -218,7 +242,7 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View view) {
                 // TODO delete logs
                 Log.e("info", "Log działa");
-                Log.e("Localisation info", locationStr);
+                //Log.e("Localisation info", locationStr);
                 if (mCameraView.isRecording()) {
                     return;
                 }
