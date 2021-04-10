@@ -56,6 +56,11 @@ public class GalleryActivity extends AppCompatActivity {
             public void onPhotoClick(String path) {
                 //do something with photo
             }
+
+            @Override
+            public void onLongPhotoClick(String path) {
+                Log.i("long click", path);
+            }
         });
 
         recyclerView.setAdapter(galleryAdapter);

@@ -4,18 +4,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.GridLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.annotation.GlideModule;
-import com.bumptech.glide.module.AppGlideModule;
 
 import java.util.List;
 
@@ -51,6 +45,11 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                 photoListener.onPhotoClick(image);
             }
         });
+
+        holder.itemView.setOnLongClickListener(v -> {
+            photoListener.onLongPhotoClick(image);
+            return false;
+        });
     }
 
     @Override
@@ -73,5 +72,6 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
 
     public interface PhotoListener{
         void onPhotoClick(String path);
+        void onLongPhotoClick(String path);
     }
 }
