@@ -4,7 +4,7 @@ import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.ExifInterface;
+import android.os.*;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -25,16 +25,14 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import org.apache.commons.imaging.ImageReadException;
+import org.apache.commons.imaging.ImageWriteException;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -180,6 +178,17 @@ public class MainActivity extends AppCompatActivity {
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
+                                /*
+                                try {
+                                    final File fileExif = new WriteExifMetadata().modifyExif(file1, longitude, latitude);
+                                    galleryAddPic(fileExif, 0);
+                                    file1.delete();
+                                } catch (ImageReadException | ImageWriteException | IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                                 */
+
                                 galleryAddPic(file1, 0);
                             }
                         });
@@ -339,12 +348,20 @@ public class MainActivity extends AppCompatActivity {
             values.put(MediaStore.MediaColumns.MIME_TYPE, mimeType);
 
         Uri externalContentUri;
-        if (mediaType == 0)
+        if (mediaType == 0) {
             externalContentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        else if (mediaType == 1)
+
+            values.put(MediaStore.Images.Media.LATITUDE, latitude);
+            values.put(MediaStore.Images.Media.LONGITUDE, longitude);
+        } else if (mediaType == 1) {
             externalContentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-        else
+
+            values.put(MediaStore.Video.Media.LATITUDE, latitude);
+            values.put(MediaStore.Video.Media.LONGITUDE, longitude);
+        } else {
             externalContentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        }
+
 
         // Android 10 restricts our access to the raw filesystem, use MediaStore to save media in that case
         if (android.os.Build.VERSION.SDK_INT >= 29) {

@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import androidx.camera.core.VideoCapture;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.ImageWriteException;
 import org.apache.commons.imaging.Imaging;
@@ -107,5 +108,71 @@ public class WriteExifMetadata {
         }
         return dst;
     }
+
+    /**
+     * @param mp4File
+     *            A source image file.
+     * @param dst
+     *            The output file.
+     * @throws IOException
+     * @throws ImageReadException
+     * @throws ImageWriteException
+     */
+    public File setExifGPSTagMp4(final File mp4File, final File dst, final double longitude, final double latitude)
+            throws IOException, ImageReadException, ImageWriteException {
+
+
+
+
+
+
+
+        /*
+        try (FileOutputStream fos = new FileOutputStream(dst);
+             OutputStream os = new BufferedOutputStream(fos)) {
+            TiffOutputSet outputSet = null;
+
+            // note that metadata might be null if no metadata is found.
+            VideoCapture.Metadata m  = new VideoCapture.Metadata(mp4File);
+            final ImageMetadata metadata = Imaging.getMetadata(mp4File);
+            final VideoCapture.Metadata mp4Metadata = (VideoCapture.Metadata) metadata;
+            if (null != mp4Metadata) {
+                // note that exif might be null if no Exif metadata is found.
+                final TiffImageMetadata exif = mp4Metadata.getExif();
+
+                if (null != exif) {
+                    // TiffImageMetadata class is immutable (read-only).
+                    // TiffOutputSet class represents the Exif data to write.
+                    //
+                    // Usually, we want to update existing Exif metadata by
+                    // changing
+                    // the values of a few fields, or adding a field.
+                    // In these cases, it is easiest to use getOutputSet() to
+                    // start with a "copy" of the fields read from the image.
+                    outputSet = exif.getOutputSet();
+                }
+            }
+
+            // if file does not contain any exif metadata, we create an empty
+            // set of exif metadata. Otherwise, we keep all of the other
+            // existing tags.
+            if (null == outputSet) {
+                outputSet = new TiffOutputSet();
+            }
+
+            {
+                outputSet.setGPSInDegrees(longitude, latitude);
+            }
+
+            new ExifRewriter().updateExifMetadataLossless(mp4File, os,
+                    outputSet);
+        }
+
+         */
+
+        return dst;
+    }
+
+
 
 }
