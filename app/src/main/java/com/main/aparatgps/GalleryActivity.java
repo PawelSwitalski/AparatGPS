@@ -1,5 +1,7 @@
 package com.main.aparatgps;
 
+import android.annotation.SuppressLint;
+import android.media.ExifInterface;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -17,6 +19,8 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class GalleryActivity extends AppCompatActivity {

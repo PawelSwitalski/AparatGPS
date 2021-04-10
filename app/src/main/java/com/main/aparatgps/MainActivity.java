@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.ExifInterface;
 import android.os.*;
 import android.util.Log;
 
@@ -178,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
-                                /*
+
                                 try {
                                     final File fileExif = new WriteExifMetadata().modifyExif(file1, longitude, latitude);
                                     galleryAddPic(fileExif, 0);
@@ -187,9 +188,9 @@ public class MainActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
 
-                                 */
 
-                                galleryAddPic(file1, 0);
+
+                                //galleryAddPic(file1, 0);
                             }
                         });
                     }
