@@ -13,7 +13,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.function.DoublePredicate;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class WriteExifMetadataTest {
@@ -78,5 +84,32 @@ public class WriteExifMetadataTest {
         System.out.println(jpegMetadata);
         file2.delete();
 
+    }
+
+    @Test
+    public void readMetadataTest() throws IOException, ImageReadException {
+        List<ImageMetadata.ImageMetadataItem> metadata =
+            WriteExifMetadata.readMetadata(".\\src\\test\\java\\p1exif.jpg");
+
+        String latitude = "";
+        for (ImageMetadata.ImageMetadataItem data:
+             metadata) {
+            if (data.toString().contains("GPSLatitude"))
+                latitude = data.toString();
+        }
+
+        //System.out.println("latitude:" + latitude);
+        assertEquals( "GPSLatitude: 37, 0, 0",latitude);
+    }
+
+    @Test
+    public void readMetadataTest2() throws IOException, ImageReadException {
+        double[] latitude = new WriteExifMetadata().getGPSLatitude(".\\src\\test\\java\\p1exif.jpg");
+
+        double[] expected = {37, 0, 0};
+
+        for (int i = 0; i < latitude.length; i++) {
+            assertEquals(expected[i], latitude[i], 0.0);
+        }
     }
 }

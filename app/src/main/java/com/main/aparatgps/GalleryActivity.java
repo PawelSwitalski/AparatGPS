@@ -1,6 +1,7 @@
 package com.main.aparatgps;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.media.ExifInterface;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -54,6 +55,11 @@ public class GalleryActivity extends AppCompatActivity {
         galleryAdapter = new GalleryAdapter(getApplicationContext(), images, new GalleryAdapter.PhotoListener() {
             @Override
             public void onPhotoClick(String path) {
+                // Start new photo activity
+                Intent intent = new Intent(getApplicationContext(), PhotoActivity.class);
+                intent.putExtra("path", path);
+                startActivity(intent);
+
                 //do something with photo
             }
 
