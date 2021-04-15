@@ -187,7 +187,7 @@ public class WriteExifMetadata {
         return (List<ImageMetadata.ImageMetadataItem>) metadata.getItems();
     }
 
-    private double[] getGPS(String path, String LatitudeORLongitude){
+    private String getGPS(String path, String LatitudeORLongitude){
         try {
             List<ImageMetadata.ImageMetadataItem> metadata = readMetadata(path);
             String latitude = "";
@@ -199,20 +199,21 @@ public class WriteExifMetadata {
             latitude = latitude.replace(LatitudeORLongitude, "")
                     .replace(" ", "");
 
-            return  Arrays.stream(latitude.split(",")).mapToDouble(Double::parseDouble).toArray();
-
+            //return  Arrays.stream(latitude.split(",")).mapToDouble(Double::parseDouble).toArray();
+            return latitude;
         } catch (IOException | ImageReadException e) {
             e.printStackTrace();
         }
-        return new double[0];
+        //return new double[0];
+        return "Error getGPS()";
     }
 
-    public double[] getGPSLatitude(String path){
+    public String getGPSLatitude(String path){
         String parameter = "GPSLatitude: ";
         return getGPS(path, parameter);
     }
 
-    public double[] getGPSLongitude(String path){
+    public String getGPSLongitude(String path){
         String parameter = "GPSLongitude: ";
         return getGPS(path, parameter);
     }
