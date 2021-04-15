@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,8 +13,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import org.apache.commons.imaging.ImageReadException;
+import org.apache.commons.imaging.common.ImageMetadata;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 
 public class PhotoActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -38,16 +43,14 @@ public class PhotoActivity extends AppCompatActivity implements OnMapReadyCallba
         textViewPath.setText(photoPath);
 
         // TextView photoData
-
-        /*
         TextView textViewData = findViewById(R.id.photoData);
-        double[] latitude = new WriteExifMetadata().getGPSLatitude(photoPath);
-        double[] longitude = new WriteExifMetadata().getGPSLongitude(photoPath);
-        String viewDataString = "latitude: " + Arrays.toString(latitude) +
-                "\nlongitude: " + Arrays.toString(longitude);
-        //textViewData.setText(viewDataString);
+        String latitude = new WriteExifMetadata().getGPSLatitude(photoPath);
+        String longitude = new WriteExifMetadata().getGPSLongitude(photoPath);
+        String viewDataString = "latitude: " + latitude +
+                "\nlongitude: " + longitude;
+        textViewData.setText(viewDataString);
 
-         */
+
 
 
         /*
