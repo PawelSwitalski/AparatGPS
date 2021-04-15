@@ -31,6 +31,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\app\src\main\java\com\main\aparatgps\PhotoActivity.java">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\app\src\main\java\com\main\aparatgps\WriteExifMetadata.java">
           <value>
             <Attribute>

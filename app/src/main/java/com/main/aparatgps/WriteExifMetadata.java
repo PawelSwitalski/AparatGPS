@@ -5,20 +5,17 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.List;
 
-import androidx.camera.core.VideoCapture;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.ImageWriteException;
 import org.apache.commons.imaging.Imaging;
 import org.apache.commons.imaging.common.ImageMetadata;
-import org.apache.commons.imaging.common.RationalNumber;
 import org.apache.commons.imaging.formats.jpeg.JpegImageMetadata;
 import org.apache.commons.imaging.formats.jpeg.exif.ExifRewriter;
 import org.apache.commons.imaging.formats.tiff.TiffImageMetadata;
-import org.apache.commons.imaging.formats.tiff.constants.ExifTagConstants;
-import org.apache.commons.imaging.formats.tiff.write.TiffOutputDirectory;
 import org.apache.commons.imaging.formats.tiff.write.TiffOutputSet;
-import org.apache.commons.io.FileUtils;
 
 public class WriteExifMetadata {
     // TODO support for mp4
@@ -173,6 +170,51 @@ public class WriteExifMetadata {
         return dst;
     }
 
+    public static List<ImageMetadata.ImageMetadataItem> readMetadata(String path) throws IOException, ImageReadException {
+        File file = new File(path);
+        final ImageMetadata metadata = Imaging.getMetadata(file);
 
+        List<? extends ImageMetadata.ImageMetadataItem> list = metadata.getItems();
+
+
+        /*
+        for (Object o :
+                list) {
+            System.out.println(o);
+        }
+         */
+
+        return (List<ImageMetadata.ImageMetadataItem>) metadata.getItems();
+    }
+
+    private double[] getGPS(String path, String LatitudeORLongitude){
+        try {
+            List<ImageMetadata.ImageMetadataItem> metadata = readMetadata(path);
+            String latitude = "";
+            for (ImageMetadata.ImageMetadataItem data:
+                    metadata) {
+                if (data.toString().contains(LatitudeORLongitude))
+                    latitude = data.toString();
+            }
+            latitude = latitude.replace(LatitudeORLongitude, "")
+                    .replace(" ", "");
+
+            return  Arrays.stream(latitude.split(",")).mapToDouble(Double::parseDouble).toArray();
+
+        } catch (IOException | ImageReadException e) {
+            e.printStackTrace();
+        }
+        return new double[0];
+    }
+
+    public double[] getGPSLatitude(String path){
+        String parameter = "GPSLatitude: ";
+        return getGPS(path, parameter);
+    }
+
+    public double[] getGPSLongitude(String path){
+        String parameter = "GPSLongitude: ";
+        return getGPS(path, parameter);
+    }
 
 }
