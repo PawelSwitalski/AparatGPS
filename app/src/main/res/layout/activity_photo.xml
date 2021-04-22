@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".PhotoActivity">
+        tools:context=".photo.PhotoActivity">
 
     <LinearLayout
             android:orientation="vertical"
@@ -26,6 +26,9 @@
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+                <com.google.android.gms.maps.MapView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/mapView2"/>
                 <TextView
                         android:text="TextView"
                         android:layout_width="match_parent"
@@ -36,6 +39,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/photoData"/>
+                <fragment
+                        android:name="com.main.aparatgps.photo.MapFragment"
+                        android:id="@+id/activity_photo_fragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
                 <com.google.android.gms.maps.MapView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

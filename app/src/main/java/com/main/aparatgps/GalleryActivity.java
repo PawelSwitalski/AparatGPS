@@ -1,8 +1,6 @@
 package com.main.aparatgps;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.media.ExifInterface;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -11,17 +9,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.widget.GridView;
-import android.widget.TextView;
 import android.widget.Toast;
+import com.main.aparatgps.photo.PhotoActivity;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 public class GalleryActivity extends AppCompatActivity {

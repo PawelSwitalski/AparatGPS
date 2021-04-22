@@ -102,6 +102,7 @@ public class WriteExifMetadataTest {
         assertEquals( "GPSLatitude: 37, 0, 0",latitude);
     }
 
+    /*
     @Test
     public void readMetadataTest2() throws IOException, ImageReadException {
         double[] latitude = new WriteExifMetadata().getGPSLatitude(".\\src\\test\\java\\p1exif.jpg");
@@ -112,4 +113,6 @@ public class WriteExifMetadataTest {
             assertEquals(expected[i], latitude[i], 0.0);
         }
     }
+
+     */
 }
