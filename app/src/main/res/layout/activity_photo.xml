@@ -11,21 +11,21 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent" tools:layout_editor_absoluteY="157dp"
-            tools:layout_editor_absoluteX="160dp"
-            android:weightSum="100">
-        <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" tools:srcCompat="@tools:sample/avatars"
-                android:id="@+id/imageView" android:rotation="90"
-                android:contentDescription="@string/common_open_on_phone"
-                android:layout_weight="60"/>
+            tools:layout_editor_absoluteX="160dp">
+
+
         <ScrollView android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="40">
+                    android:layout_height="match_parent">
+
             <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+                <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" tools:srcCompat="@tools:sample/avatars"
+                        android:id="@+id/imageView" android:rotation="90"
+                        android:contentDescription="@string/common_open_on_phone"/>
                 <TextView
                         android:text="TextView"
                         android:layout_width="match_parent"
