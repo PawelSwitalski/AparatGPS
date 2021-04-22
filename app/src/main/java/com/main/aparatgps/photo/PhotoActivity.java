@@ -66,41 +66,6 @@ public class PhotoActivity extends AppCompatActivity implements OnMapReadyCallba
                     .commit();
         }
 
-        /*
-        // Retrieve the content view that renders the map.
-        setContentView(R.layout.activity_maps);
-
-        // Get the SupportMapFragment and request notification when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-         */
-
-        /*
-        if (savedInstanceState == null) {
-            Bundle bundle = new Bundle();
-            bundle.putString("latitude", latitude);
-            bundle.putString("longitude", longitude);
-            bundle.putInt("some_int", 0);
-
-            getSupportFragmentManager().beginTransaction()
-                    .setReorderingAllowed(true)
-                    .add(R.id.activity_photo_fragment, MapFragment.class, bundle)
-                    .commit();
-
-        }
-
-         */
-
-
-
-
-        /*
-        getContentResolver().
-        MediaStore.Images.Media.
-         */
-
     }
 
 

@@ -39,8 +39,8 @@ public class MapsFragment extends Fragment {
      * @param longitude GPS longitude
      * @return A new instance of fragment MapFragment.
      */
-    public static MapFragment newInstance(String param1, String param2, String latitude, String longitude) {
-        MapFragment fragment = new MapFragment();
+    public static MapsFragment newInstance(String param1, String param2, String latitude, String longitude) {
+        MapsFragment fragment = new MapsFragment();
         Bundle args = new Bundle();
         args.putString(LATITUDE, latitude);
         args.putString(LONGITUDE, longitude);

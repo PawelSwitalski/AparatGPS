@@ -26,9 +26,6 @@
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                <com.google.android.gms.maps.MapView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:id="@+id/mapView2"/>
                 <TextView
                         android:text="TextView"
                         android:layout_width="match_parent"
@@ -44,13 +41,6 @@
                         android:id="@+id/activity_photo_fragment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
-                <com.google.android.gms.maps.MapView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/mapView"
-                        android:clickable="true"
-                        android:enabled="true"
-                        android:focusable="true"/>
 
             </LinearLayout>
         </ScrollView>
