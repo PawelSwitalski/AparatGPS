@@ -45,6 +45,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\app\src\main\java\com\main\aparatgps\photo\MapsFragment.java">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\app\src\test\java\com\main\aparatgps\ExifMetadataMP4Test.java">
           <value>
             <Attribute>

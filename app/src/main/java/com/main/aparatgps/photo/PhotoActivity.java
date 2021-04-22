@@ -1,4 +1,4 @@
-package com.main.aparatgps;
+package com.main.aparatgps.photo;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,8 +11,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.main.aparatgps.R;
+import com.main.aparatgps.WriteExifMetadata;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.common.ImageMetadata;
 
@@ -50,13 +53,18 @@ public class PhotoActivity extends AppCompatActivity implements OnMapReadyCallba
                 "\nlongitude: " + longitude;
         textViewData.setText(viewDataString);
 
+        // MapFragment
+        if (savedInstanceState == null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("latitude", latitude);
+            bundle.putString("longitude", longitude);
+            bundle.putInt("some_int", 0);
 
-
-
-        /*
-        getContentResolver().
-        MediaStore.Images.Media.
-         */
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.activity_photo_fragment, MapsFragment.class, bundle)
+                    .commit();
+        }
 
     }
 
