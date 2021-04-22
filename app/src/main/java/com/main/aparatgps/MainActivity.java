@@ -32,11 +32,28 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
+import com.main.aparatgps.photo.DriveServieHelper;
+
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.ImageWriteException;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.Executor;
@@ -48,6 +65,8 @@ import static androidx.camera.core.VideoCapture.*;
 public class MainActivity extends AppCompatActivity {
 
     static Button btnClose, btnLens, btnVideo, btnStop, btnPhoto, btnGallery;
+
+    DriveServieHelper driveServieHelper;
 
     private Executor executor = Executors.newSingleThreadExecutor();
     CameraSelector cameraSelector;
@@ -69,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        requestSignIn();
         if (allPermissionsGranted()) {
             startGPS();
             startCamera();
@@ -76,6 +96,47 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS,
                     REQUEST_CODE_PERMISSIONS);
         }
+    }
+
+    private void requestSignIn() {
+        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().requestScopes(new Scope(DriveScopes.DRIVE_FILE)).build();
+
+        GoogleSignInClient client = GoogleSignIn.getClient(this, signInOptions);
+
+        startActivityForResult(client.getSignInIntent(), 400);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode){
+            case 400:
+                if(requestCode == 400){
+                    handleSignInIntent(data);
+                }
+                break;
+        }
+    }
+
+    private void handleSignInIntent(Intent data) {
+        GoogleSignIn.getSignedInAccountFromIntent(data).addOnSuccessListener(new OnSuccessListener<GoogleSignInAccount>() {
+            @Override
+            public void onSuccess(GoogleSignInAccount googleSignInAccount) {
+                GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(MainActivity.this, Collections.singleton(DriveScopes.DRIVE_FILE));
+                credential.setSelectedAccount(googleSignInAccount.getAccount());
+                Drive googleDriveService = new Drive.Builder(
+                        AndroidHttp.newCompatibleTransport(),
+                        new GsonFactory(),
+                        credential
+                ).setApplicationName("Android GPS").build();
+                driveServieHelper = new DriveServieHelper(googleDriveService);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
     }
 
     private void startGPS() {
@@ -169,7 +230,9 @@ public class MainActivity extends AppCompatActivity {
                 if(mCameraView.isRecording()){return;}
 
                 SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
-                final File file1 = new File(getBatchDirectoryName(), mDateFormat.format(new Date()) + ".jpg");
+                String name = mDateFormat.format(new Date()) + ".jpg";
+                String name2 = mDateFormat.format(new Date()) + "exif.jpg";
+                final File file1 = new File(getBatchDirectoryName(), name);
 
                 mCameraView.setCaptureMode(CameraView.CaptureMode.IMAGE);
                 ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(file1).build();
@@ -184,6 +247,7 @@ public class MainActivity extends AppCompatActivity {
                                     final File fileExif = new WriteExifMetadata().modifyExif(file1, longitude, latitude);
                                     galleryAddPic(fileExif, 0);
                                     file1.delete();
+                                    driveServieHelper.createImage(name2);
                                 } catch (ImageReadException | ImageWriteException | IOException e) {
                                     e.printStackTrace();
                                 }
@@ -200,7 +264,6 @@ public class MainActivity extends AppCompatActivity {
                         error.printStackTrace();
                     }
                 }); //image saved callback end
-
             } //onclick end
         }); //btnPhoto click listener end
 
@@ -301,10 +364,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        if(requestCode == REQUEST_CODE_PERMISSIONS){
-            if(allPermissionsGranted()){
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE_PERMISSIONS) {
+            if (allPermissionsGranted()) {
                 startCamera();
-            } else{
+            } else {
                 Toast.makeText(this, "Permissions not granted by the user.", Toast.LENGTH_SHORT).show();
                 this.finish();
             }
