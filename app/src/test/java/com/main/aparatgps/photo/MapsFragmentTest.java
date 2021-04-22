@@ -28,4 +28,6 @@ public class MapsFragmentTest {
         double longitudeNumber = MapsFragment.getNumber(longitude);
         assertEquals(correctLo, longitudeNumber, 0.02);
     }
+
+
 }
