@@ -5,8 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -14,11 +17,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.main.aparatgps.R;
 import com.main.aparatgps.WriteExifMetadata;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.common.ImageMetadata;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +32,8 @@ import java.util.List;
 public class PhotoActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private String photoPath;
+    FloatingActionButton bluetoothButton;
+    FloatingActionButton deleteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +42,10 @@ public class PhotoActivity extends AppCompatActivity implements OnMapReadyCallba
 
         Intent intent = getIntent();
         photoPath = intent.getStringExtra("path");
+
+        //Buttons
+        bluetoothButton = findViewById(R.id.shareViaBlootothButton);
+        deleteButton = findViewById(R.id.deletePhotoButton);
 
         // ImageView
         ImageView imageView = findViewById(R.id.imageView);
@@ -65,6 +76,23 @@ public class PhotoActivity extends AppCompatActivity implements OnMapReadyCallba
                     .add(R.id.activity_photo_fragment, MapsFragment.class, bundle)
                     .commit();
         }
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                File fdelete = new File(photoPath);
+                if (fdelete.exists()) {
+                    if (fdelete.delete()) {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Photo deleted", Toast.LENGTH_SHORT);
+                        toast.show();
+                        finish();
+                    } else {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Can't delete photo", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                }
+            }
+        });
 
     }
 

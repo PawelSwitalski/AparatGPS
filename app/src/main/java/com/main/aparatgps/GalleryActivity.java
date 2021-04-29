@@ -84,4 +84,18 @@ public class GalleryActivity extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    protected void onResume() {
+        recyclerView = findViewById(R.id.recyclerview_gallery_images);
+
+        //sprawdzanie permission
+        if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(GalleryActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_READ_PERMISSION_CODE);
+        }
+        else{
+            loadImages();
+        }
+        super.onResume();
+    }
 }
