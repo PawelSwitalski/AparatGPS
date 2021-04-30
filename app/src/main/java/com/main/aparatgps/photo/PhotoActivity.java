@@ -1,12 +1,16 @@
 package com.main.aparatgps.photo;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -16,6 +20,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.main.aparatgps.R;
 import com.main.aparatgps.WriteExifMetadata;
+import com.main.aparatgps.photo.bluetooth.BluetoothActivity;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.common.ImageMetadata;
 
@@ -24,7 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class PhotoActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class PhotoActivity extends AppCompatActivity {
 
     private String photoPath;
 
@@ -65,8 +70,27 @@ public class PhotoActivity extends AppCompatActivity implements OnMapReadyCallba
                     .add(R.id.activity_photo_fragment, MapsFragment.class, bundle)
                     .commit();
         }
+        
+        // Bluetooth adapter
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAdapter == null) {
+            // Device doesn't support Bluetooth
+            Log.d("Bluetooth PhotoActivity", "bluetoothAdapter == null");
+            Toast.makeText(this, "bluetooth nie działa", Toast.LENGTH_SHORT).show();
+        } else {
+            if (!bluetoothAdapter.isEnabled()) {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, 1);
+            }
+            }
+        }
 
+    public void openBluetooth(View view) {
+        Intent intent = new Intent(getApplicationContext(), BluetoothActivity.class);
+        intent.putExtra("photoPath", photoPath);
+        startActivity(intent);
     }
+}
 
 
     /**
@@ -78,6 +102,7 @@ public class PhotoActivity extends AppCompatActivity implements OnMapReadyCallba
      * Play services inside the SupportMapFragment. The API invokes this method after the user has
      * installed Google Play services and returned to the app.
      */
+    /*
     @Override
     public void onMapReady(GoogleMap googleMap) {
         // Add a marker in Sydney, Australia,
@@ -88,4 +113,5 @@ public class PhotoActivity extends AppCompatActivity implements OnMapReadyCallba
                 .title("Marker in Sydney"));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
-}
+
+     */
