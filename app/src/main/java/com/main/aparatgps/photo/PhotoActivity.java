@@ -90,8 +90,9 @@ public class PhotoActivity extends AppCompatActivity {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBtIntent, 1);
             }
-            }
         }
+
+
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +111,9 @@ public class PhotoActivity extends AppCompatActivity {
             }
         });
 
+
+        }
+
   
     public void openBluetooth(View view) {
         Intent intent = new Intent(getApplicationContext(), BluetoothActivity.class);
@@ -118,26 +122,3 @@ public class PhotoActivity extends AppCompatActivity {
     }
 }
 
-
-    /**
-     * Manipulates the map when it's available.
-     * The API invokes this callback when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user receives a prompt to install
-     * Play services inside the SupportMapFragment. The API invokes this method after the user has
-     * installed Google Play services and returned to the app.
-     */
-    /*
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        // Add a marker in Sydney, Australia,
-        // and move the map's camera to the same location.
-        LatLng sydney = new LatLng(-33.852, 151.211);
-        googleMap.addMarker(new MarkerOptions()
-                .position(sydney)
-                .title("Marker in Sydney"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-    }
-
-     */
