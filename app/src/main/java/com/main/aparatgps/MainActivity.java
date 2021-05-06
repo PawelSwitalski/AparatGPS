@@ -76,7 +76,8 @@ public class MainActivity extends AppCompatActivity {
     private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA",
             "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.RECORD_AUDIO",
             "android.permission.ACCESS_FINE_LOCATION", "android.permission.INTERNET",
-            "android.permission.ACCESS_COARSE_LOCATION"};
+            "android.permission.ACCESS_COARSE_LOCATION", "android.permission.BLUETOOTH",
+            "android.permission.BLUETOOTH_ADMIN", "android.permission.ACCESS_FINE_LOCATION"};
 
     private LocationManager locationManager;
 
