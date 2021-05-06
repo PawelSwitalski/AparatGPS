@@ -1,6 +1,8 @@
 package com.main.aparatgps.photo;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -8,9 +10,11 @@ import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.Drive;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
 
 public class DriveServieHelper {
 
@@ -26,6 +30,7 @@ public class DriveServieHelper {
             com.google.api.services.drive.model.File fileMetaData = new com.google.api.services.drive.model.File();
             fileMetaData.setName(imageName);
             File file = new File("/storage/emulated/0/DCIM/Camera/"+imageName);
+
             FileContent mediaContent = new FileContent("image/jpg", file);
             com.google.api.services.drive.model.File myFile = null;
             try{
@@ -40,4 +45,5 @@ public class DriveServieHelper {
             return myFile.getId();
         });
     }
+
 }
