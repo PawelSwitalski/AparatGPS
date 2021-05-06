@@ -18,12 +18,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.main.aparatgps.R;
 import com.main.aparatgps.WriteExifMetadata;
 import com.main.aparatgps.photo.bluetooth.BluetoothActivity;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.common.ImageMetadata;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -32,6 +34,8 @@ import java.util.List;
 public class PhotoActivity extends AppCompatActivity {
 
     private String photoPath;
+    FloatingActionButton bluetoothButton;
+    FloatingActionButton deleteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,10 @@ public class PhotoActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         photoPath = intent.getStringExtra("path");
+
+        //Buttons
+        bluetoothButton = findViewById(R.id.shareViaBlootothButton);
+        deleteButton = findViewById(R.id.deletePhotoButton);
 
         // ImageView
         ImageView imageView = findViewById(R.id.imageView);
@@ -85,6 +93,24 @@ public class PhotoActivity extends AppCompatActivity {
             }
         }
 
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                File fdelete = new File(photoPath);
+                if (fdelete.exists()) {
+                    if (fdelete.delete()) {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Photo deleted", Toast.LENGTH_SHORT);
+                        toast.show();
+                        finish();
+                    } else {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Can't delete photo", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                }
+            }
+        });
+
+  
     public void openBluetooth(View view) {
         Intent intent = new Intent(getApplicationContext(), BluetoothActivity.class);
         intent.putExtra("photoPath", photoPath);
