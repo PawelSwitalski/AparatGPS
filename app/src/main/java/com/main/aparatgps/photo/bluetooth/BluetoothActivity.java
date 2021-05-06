@@ -4,25 +4,29 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.main.aparatgps.R;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static com.main.aparatgps.MainActivity.WriteFileToStream;
+
 
 public class BluetoothActivity extends AppCompatActivity {
 
@@ -154,6 +158,22 @@ public class BluetoothActivity extends AppCompatActivity {
                 byte[] readBuff = (byte[]) msg.obj;
                 Bitmap bitmap = BitmapFactory.decodeByteArray(readBuff, 0, msg.arg1);
                 imageView.setImageBitmap(bitmap);
+
+                SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
+                String name = mDateFormat.format(new Date()) + ".jpg";
+
+                final File file1 = new File(getBatchDirectoryName(), name);
+                try {
+                    FileOutputStream fOut = new FileOutputStream(file1);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+                    fOut.flush();
+                    fOut.close();
+                } catch (IOException exception){
+                    exception.printStackTrace();
+                }
+
+
+                galleryAddPic(file1, 0);
                 /*
                 byte[] readBuff = (byte[]) msg.obj;
                 String tempMsg = new String(readBuff, 0, msg.arg1);
@@ -178,6 +198,83 @@ public class BluetoothActivity extends AppCompatActivity {
         writeMsg = findViewById(R.id.editText);
         imageView = findViewById(R.id.imageView);
     }
+
+
+
+    private void galleryAddPic(File originalFile, int mediaType) {
+        if (!originalFile.exists()) {
+            return;
+        }
+
+        int pathSeparator = String.valueOf(originalFile).lastIndexOf('/');
+        int extensionSeparator = String.valueOf(originalFile).lastIndexOf('.');
+        String filename = pathSeparator >= 0 ? String.valueOf(originalFile).substring(pathSeparator + 1) : String.valueOf(originalFile);
+        String extension = extensionSeparator >= 0 ? String.valueOf(originalFile).substring(extensionSeparator + 1) : "";
+
+        // Credit: https://stackoverflow.com/a/31691791/2373034
+        String mimeType = extension.length() > 0 ? MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.toLowerCase(Locale.ENGLISH)) : null;
+
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.MediaColumns.TITLE, filename);
+        values.put(MediaStore.MediaColumns.DISPLAY_NAME, filename);
+        values.put(MediaStore.MediaColumns.DATE_ADDED, System.currentTimeMillis() / 1000);
+
+        if (mimeType != null && mimeType.length() > 0)
+            values.put(MediaStore.MediaColumns.MIME_TYPE, mimeType);
+
+        Uri externalContentUri;
+        if (mediaType == 0) {
+            externalContentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+
+        } else if (mediaType == 1) {
+            externalContentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+
+        } else {
+            externalContentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        }
+
+
+        // Android 10 restricts our access to the raw filesystem, use MediaStore to save media in that case
+        if (android.os.Build.VERSION.SDK_INT >= 29) {
+            values.put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/Camera");
+            values.put(MediaStore.MediaColumns.DATE_TAKEN, System.currentTimeMillis());
+            values.put(MediaStore.MediaColumns.IS_PENDING, true);
+
+            Uri uri = getContentResolver().insert(externalContentUri, values);
+            if (uri != null) {
+                try {
+                    if (WriteFileToStream(originalFile, getContentResolver().openOutputStream(uri))) {
+                        values.put(MediaStore.MediaColumns.IS_PENDING, false);
+                        getContentResolver().update(uri, values, null, null);
+                    }
+                } catch (Exception e) {
+                    getContentResolver().delete(uri, null, null);
+                }
+            }
+            originalFile.delete();
+        } else {
+            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            mediaScanIntent.setData(Uri.fromFile(originalFile));
+            sendBroadcast(mediaScanIntent);
+        }
+
+    } //gallery add end
+
+    public String getBatchDirectoryName() {
+        String app_folder_path;
+        if (android.os.Build.VERSION.SDK_INT >= 29) {
+            app_folder_path = getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString();
+        } else {
+            app_folder_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera";
+        }
+
+        File dir = new File(app_folder_path);
+        if (!dir.exists() && !dir.mkdirs()) {
+        }
+        return app_folder_path;
+    }
+
+
 
 
     private class ServerClass extends Thread {

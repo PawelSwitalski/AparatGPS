@@ -456,7 +456,7 @@ public class MainActivity extends AppCompatActivity {
     } //gallery add end
 
 
-    private static boolean WriteFileToStream(File file, OutputStream out){
+    public static boolean WriteFileToStream(File file, OutputStream out){
         try
         {
             InputStream in = new FileInputStream( file );
