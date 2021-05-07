@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,8 +26,11 @@ import com.main.aparatgps.photo.bluetooth.BluetoothActivity;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.common.ImageMetadata;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,6 +40,10 @@ public class PhotoActivity extends AppCompatActivity {
     private String photoPath;
     FloatingActionButton bluetoothButton;
     FloatingActionButton deleteButton;
+    FloatingActionButton noteButton;
+
+    String nazwa;
+    TextView photoNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +53,12 @@ public class PhotoActivity extends AppCompatActivity {
         Intent intent = getIntent();
         photoPath = intent.getStringExtra("path");
 
+        photoNote = findViewById(R.id.photoNote);
+
         //Buttons
-        bluetoothButton = findViewById(R.id.shareViaBlootothButton);
+        bluetoothButton = findViewById(R.id.shareViaBluetoothButton);
         deleteButton = findViewById(R.id.deletePhotoButton);
+        noteButton = findViewById(R.id.noteButton);
 
         // ImageView
         ImageView imageView = findViewById(R.id.imageView);
@@ -65,6 +76,13 @@ public class PhotoActivity extends AppCompatActivity {
         String viewDataString = "latitude: " + latitude +
                 "\nlongitude: " + longitude;
         textViewData.setText(viewDataString);
+
+        String [] separatedPhotoPath = photoPath.split("/");
+        int arraySize = separatedPhotoPath.length;
+        nazwa = separatedPhotoPath[arraySize-1];
+
+        //TextView photoNote
+        loadNote(nazwa, photoNote);
 
         // MapFragment
         if (savedInstanceState == null) {
@@ -84,7 +102,7 @@ public class PhotoActivity extends AppCompatActivity {
         if (bluetoothAdapter == null) {
             // Device doesn't support Bluetooth
             Log.d("Bluetooth PhotoActivity", "bluetoothAdapter == null");
-            Toast.makeText(this, "bluetooth nie działa", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Bluetooth doesn't work", Toast.LENGTH_SHORT).show();
         } else {
             if (!bluetoothAdapter.isEnabled()) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -111,14 +129,62 @@ public class PhotoActivity extends AppCompatActivity {
             }
         });
 
+        noteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), NoteActivity.class);
+                intent.putExtra("nazwa", nazwa);
+                startActivity(intent);
+            }
+        });
 
+        noteButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Toast toast = Toast.makeText(getApplicationContext(), "Add/edit note", Toast.LENGTH_SHORT);
+                toast.show();
+                return false;
+            }
+        });
         }
 
-  
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadNote(nazwa, photoNote);
+    }
+
     public void openBluetooth(View view) {
         Intent intent = new Intent(getApplicationContext(), BluetoothActivity.class);
         intent.putExtra("photoPath", photoPath);
         startActivity(intent);
+    }
+
+    public void loadNote(String nazwa, TextView textView){
+        FileInputStream fis = null;
+        try {
+            fis = openFileInput(nazwa);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String text;
+
+            while ((text = br.readLine())!=null){
+                sb.append(text).append("\n");
+            }
+
+            textView.setText(sb.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(fis!=null){
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
 

@@ -247,8 +247,28 @@ public class MainActivity extends AppCompatActivity {
                                 try {
                                     final File fileExif = new WriteExifMetadata().modifyExif(file1, longitude, latitude);
                                     galleryAddPic(fileExif, 0);
+                                    Log.e("PLIIIIK: ",file1.getAbsolutePath());
                                     file1.delete();
                                     driveServieHelper.createImage(name2);
+                                    FileOutputStream fos = null;
+                                    try {
+                                        fos = openFileOutput(name2, MODE_PRIVATE);
+                                        String tekst = " ";
+                                        fos.write(tekst.getBytes());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    } finally {
+                                        if(fos==null){
+                                            try{
+                                                if (fos != null) {
+                                                    fos.close();
+                                                }
+                                            }
+                                            catch (IOException e){
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
                                 } catch (ImageReadException | ImageWriteException | IOException e) {
                                     e.printStackTrace();
                                 }
