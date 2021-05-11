@@ -76,10 +76,17 @@ public class MapsFragment extends Fragment {
      * latitude and longitude
      *
      * @param value GPS latitude or longitude
-     * @return converted number.
+     * @return converted number. Or default value 0.0
      */
     public static double getNumber(String value){
-        String result = value.substring(0, value.indexOf(",", value.indexOf(",") + 1));
+        //String result = value.substring(0, value.indexOf(",", value.indexOf(",") + 1));
+        String result;
+        try {
+            result = value.substring(0, value.indexOf(",", value.indexOf(",") + 1));
+        } catch (StringIndexOutOfBoundsException exception) {
+            result = "0.0";
+        }
+
         return Double.parseDouble(result.replace(",", "."));
     }
 

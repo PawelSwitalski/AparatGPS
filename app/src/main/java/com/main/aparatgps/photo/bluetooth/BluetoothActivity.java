@@ -49,7 +49,7 @@ public class BluetoothActivity extends AppCompatActivity {
 
     int REQUEST_ENABLE_BLUETOOTH = 1;
 
-    private static final String APP_NAME = "AparatGPS";
+    private static final String APP_NAME = "BTImages";
     //private static final UUID MY_UUID = UUID.randomUUID();
     private static final UUID MY_UUID=UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66");
 
