@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.imaging.ImageReadException;
@@ -174,8 +175,13 @@ public class WriteExifMetadata {
         File file = new File(path);
         final ImageMetadata metadata = Imaging.getMetadata(file);
 
-        List<? extends ImageMetadata.ImageMetadataItem> list = metadata.getItems();
+        List<ImageMetadata.ImageMetadataItem> list = new LinkedList<>();
 
+        try {
+            list = (List<ImageMetadata.ImageMetadataItem>) metadata.getItems();
+        } catch (NullPointerException exception) {
+
+        }
 
         /*
         for (Object o :
@@ -184,7 +190,8 @@ public class WriteExifMetadata {
         }
          */
 
-        return (List<ImageMetadata.ImageMetadataItem>) metadata.getItems();
+        //return (List<ImageMetadata.ImageMetadataItem>) metadata.getItems();
+        return list;
     }
 
     private String getGPS(String path, String LatitudeORLongitude){
