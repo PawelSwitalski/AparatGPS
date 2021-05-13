@@ -247,7 +247,6 @@ public class MainActivity extends AppCompatActivity {
                                 try {
                                     final File fileExif = new WriteExifMetadata().modifyExif(file1, longitude, latitude);
                                     galleryAddPic(fileExif, 0);
-                                    Log.e("PLIIIIK: ",file1.getAbsolutePath());
                                     file1.delete();
                                     driveServieHelper.createImage(name2);
                                     FileOutputStream fos = null;
