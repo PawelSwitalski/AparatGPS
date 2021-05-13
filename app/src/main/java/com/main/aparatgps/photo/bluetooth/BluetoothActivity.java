@@ -1,5 +1,6 @@
 package com.main.aparatgps.photo.bluetooth;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
@@ -13,6 +14,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.view.Gravity;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.*;
@@ -120,7 +122,20 @@ public class BluetoothActivity extends AppCompatActivity {
             Bitmap bitmap = BitmapFactory.decodeFile(photoPath);
 
             ByteArrayOutputStream stream=new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream);
+            try {
+                bitmap.compress(Bitmap.CompressFormat.JPEG,
+                        Integer.parseInt(writeMsg.getText().toString()),
+                        stream);
+            } catch (Exception exception) {
+                //bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream);
+                Toast toast = Toast.makeText(this,
+                        "Ustaw jakość zdjęcia \n1-100",
+                        Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER_HORIZONTAL,0,0);
+                toast.show();
+                return;
+            }
+            //bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream);
             byte[] imageBytes=stream.toByteArray();
             //byte[] imageBytes = bitmap.getNinePatchChunk();
 
@@ -393,7 +408,7 @@ public class BluetoothActivity extends AppCompatActivity {
                             buffer=new byte[numberOfBytes];
                             flag=false;
                         }
-                    } catch (IOException e) {
+                    } catch (IOException | NumberFormatException e) {
                         e.printStackTrace();
                     }
                 }else{
