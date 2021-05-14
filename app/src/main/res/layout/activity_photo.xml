@@ -19,6 +19,7 @@
             android:layout_height="75dp"
             android:background="@color/cardview_dark_background"
             android:padding="10dp"
+            android:layout_gravity="center"
             android:layout_marginBottom="40dp">
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -27,6 +28,7 @@
                 android:layout_height="55dp"
                 android:layout_marginEnd="30dp"
                 android:clickable="true"
+                android:layout_gravity="center"
                 android:focusable="true"
                 app:srcCompat="@android:drawable/ic_menu_edit" />
 
@@ -35,6 +37,7 @@
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:clickable="true"
+                android:layout_gravity="center"
                 android:layout_marginEnd="30dp"
                 app:srcCompat="@android:drawable/stat_sys_data_bluetooth"
                 android:focusable="true"
@@ -44,12 +47,21 @@
                 android:id="@+id/deletePhotoButton"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
-                android:layout_gravity="end"
+                android:layout_gravity="center"
                 android:layout_marginEnd="30dp"
                 android:clickable="true"
                 android:focusable="true"
                 app:srcCompat="@android:drawable/ic_menu_delete" />
 
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/favouritesButton"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="30dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:srcCompat="@android:drawable/star_big_off" />
 
 
         </LinearLayout>

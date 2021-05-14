@@ -1,7 +1,11 @@
 package com.main.aparatgps.photo;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -13,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -41,9 +47,14 @@ public class PhotoActivity extends AppCompatActivity {
     FloatingActionButton bluetoothButton;
     FloatingActionButton deleteButton;
     FloatingActionButton noteButton;
+    FloatingActionButton favouritesButton;
+
+    boolean favouriteState;
 
     String nazwa;
     TextView photoNote;
+
+    DatabaseHelper dataBaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +70,19 @@ public class PhotoActivity extends AppCompatActivity {
         bluetoothButton = findViewById(R.id.shareViaBluetoothButton);
         deleteButton = findViewById(R.id.deletePhotoButton);
         noteButton = findViewById(R.id.noteButton);
+        favouritesButton = findViewById(R.id.favouritesButton);
+
+        dataBaseHelper = new DatabaseHelper(getApplicationContext(), "FavourtiePhotos", null, 1);
+        SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
+
+        if(checkIfPhotoIsFavourite(db, photoPath)){
+            favouriteState = true;
+            favouritesButton.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_favourite_true));
+        }
+        else{
+            favouriteState = false;
+            favouritesButton.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_favourite_false));
+        }
 
         // ImageView
         ImageView imageView = findViewById(R.id.imageView);
@@ -146,12 +170,44 @@ public class PhotoActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        favouritesButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceType")
+            @Override
+            public void onClick(View view) {
+                if(favouriteState){
+                    favouritesButton.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_favourite_false));
+                    favouriteState=false;
+                    removeFromFavourites(db, photoPath);
+                    Toast toast = Toast.makeText(getApplicationContext(), "Photo removed from favourites", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                else{
+                    favouritesButton.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_favourite_true));
+                    favouriteState=true;
+                    addToFavourites(db, photoPath);
+                    Toast toast = Toast.makeText(getApplicationContext(), "Photo added to favourites", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            }
+        });
         }
 
     @Override
     protected void onResume() {
         super.onResume();
         loadNote(nazwa, photoNote);
+    }
+
+    public boolean checkIfPhotoIsFavourite(SQLiteDatabase db, String absolutePath) {
+        Cursor cursor = db.rawQuery("SELECT Absolute_Path FROM FavouritePhotos WHERE Absolute_Path =?", new String[]{absolutePath});
+        boolean hasNext = true;
+        if(cursor.getCount()<=0){
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 
     public void openBluetooth(View view) {
@@ -185,6 +241,16 @@ public class PhotoActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public void addToFavourites(SQLiteDatabase db, String absolutePath){
+        ContentValues values = new ContentValues();
+        values.put("Absolute_Path", absolutePath);
+        db.insertOrThrow("FavouritePhotos", null, values);
+    }
+
+    public void removeFromFavourites(SQLiteDatabase db, String absolutePath){
+        db.delete("FavouritePhotos", "Absolute_Path = ?", new String[]{absolutePath});
     }
 }
 

@@ -10,12 +10,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.main.aparatgps.photo.DatabaseHelper;
 import com.main.aparatgps.photo.PhotoActivity;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class GalleryActivity extends AppCompatActivity {
@@ -39,6 +44,8 @@ public class GalleryActivity extends AppCompatActivity {
         }
         else{
             loadImages();
+            DatabaseHelper dataBaseHelper = new DatabaseHelper(getApplicationContext(), "FavouritePhotos", null, 1);
+            SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
         }
     }
 

@@ -1,6 +1,7 @@
 package com.main.aparatgps;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -45,6 +46,7 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
+import com.main.aparatgps.photo.DatabaseHelper;
 import com.main.aparatgps.photo.DriveServieHelper;
 
 import org.apache.commons.imaging.ImageReadException;
@@ -97,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS,
                     REQUEST_CODE_PERMISSIONS);
         }
+        DatabaseHelper dataBaseHelper = new DatabaseHelper(getApplicationContext(), "FavourtiePhotos", null, 1);
+        SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
     }
 
     private void requestSignIn() {
