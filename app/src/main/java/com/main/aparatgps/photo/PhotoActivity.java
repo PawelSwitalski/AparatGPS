@@ -23,6 +23,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.main.aparatgps.R;
 import com.main.aparatgps.WriteExifMetadata;
 import com.main.aparatgps.photo.bluetooth.BluetoothActivity;
+import com.main.aparatgps.photo.googledriveshare.GoogleDriveShare;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.common.ImageMetadata;
 
@@ -41,6 +42,7 @@ public class PhotoActivity extends AppCompatActivity {
     FloatingActionButton bluetoothButton;
     FloatingActionButton deleteButton;
     FloatingActionButton noteButton;
+    FloatingActionButton googleDriveButton;
 
     String nazwa;
     TextView photoNote;
@@ -59,6 +61,7 @@ public class PhotoActivity extends AppCompatActivity {
         bluetoothButton = findViewById(R.id.shareViaBluetoothButton);
         deleteButton = findViewById(R.id.deletePhotoButton);
         noteButton = findViewById(R.id.noteButton);
+        googleDriveButton = findViewById(R.id.googleDrivePhotoButton);
 
         // ImageView
         ImageView imageView = findViewById(R.id.imageView);
@@ -145,6 +148,14 @@ public class PhotoActivity extends AppCompatActivity {
                 toast.show();
                 return false;
             }
+        });
+
+        googleDriveButton.setOnClickListener(v -> {
+            Intent intentGoogleDrive = new Intent(
+                    getApplicationContext(),
+                    GoogleDriveShare.class);
+            intentGoogleDrive.putExtra("photoPath", photoPath);
+            startActivity(intentGoogleDrive);
         });
         }
 

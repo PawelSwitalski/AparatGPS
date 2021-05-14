@@ -50,6 +50,16 @@
                 android:focusable="true"
                 app:srcCompat="@android:drawable/ic_menu_delete" />
 
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/googleDrivePhotoButton"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="30dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:srcCompat="@drawable/common_google_signin_btn_icon_disabled" />
+
 
 
         </LinearLayout>
