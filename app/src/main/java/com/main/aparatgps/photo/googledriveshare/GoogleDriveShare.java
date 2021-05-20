@@ -1,6 +1,7 @@
 package com.main.aparatgps.photo.googledriveshare;
 
 import android.content.Intent;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,10 +13,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.DriveScopes;
+import com.google.api.services.drive.model.File;
+import com.google.api.services.drive.model.FileList;
 import com.main.aparatgps.R;
 import com.main.aparatgps.photo.DriveServieHelper;
 import com.google.api.services.drive.Drive;
@@ -23,8 +27,11 @@ import com.google.api.services.drive.Drive;
 import java.io.IOException;
 import java.util.Collections;
 
+import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
+
 public class GoogleDriveShare extends AppCompatActivity {
     private DriveServieHelper driveServieHelper;
+    private DriveServiceHelper2 driveServiceHelper2;
     private String photoPath;
 
     @Override
@@ -36,12 +43,33 @@ public class GoogleDriveShare extends AppCompatActivity {
 
         requestSignIn();
 
+
+        query();
         try {
-            driveServieHelper.shareImage(photoPath, "testUser");
+            //driveServieHelper.shareImage(photoPath, "testUser");
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void query() {
+        if (driveServiceHelper2 != null) {
+            //Log.d(TAG, "Querying for files.");
+
+            driveServiceHelper2.queryFiles()
+                    .addOnSuccessListener(fileList -> {
+                        StringBuilder builder = new StringBuilder();
+                        for (File file : fileList.getFiles()) {
+                            builder.append(file.getName()).append("\n");
+                        }
+                        String fileNames = builder.toString();
+                        System.out.println();
+
+                        //setReadOnlyMode();
+                    })
+                    .addOnFailureListener(exception -> Log.e(TAG, "Unable to query files.", exception));
+        }
     }
 
     private void requestSignIn() {
@@ -78,6 +106,7 @@ public class GoogleDriveShare extends AppCompatActivity {
                         credential
                 ).setApplicationName("Android GPS").build();
                 driveServieHelper = new DriveServieHelper(googleDriveService);
+                driveServiceHelper2 = new DriveServiceHelper2(googleDriveService);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
