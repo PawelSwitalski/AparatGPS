@@ -72,7 +72,7 @@ public class PhotoActivity extends AppCompatActivity {
         noteButton = findViewById(R.id.noteButton);
         favouritesButton = findViewById(R.id.favouritesButton);
 
-        dataBaseHelper = new DatabaseHelper(getApplicationContext(), "FavourtiePhotos", null, 1);
+        dataBaseHelper = new DatabaseHelper(getApplicationContext(), "FavouritePhotos", null, 1);
         SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
 
         if(checkIfPhotoIsFavourite(db, photoPath)){

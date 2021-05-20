@@ -1,15 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="1dp">
+    android:padding="1dp"
+    android:weightSum="100">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/recyclerview_gallery_images">
-        </androidx.recyclerview.widget.RecyclerView>
+            android:layout_height="0dp"
+            android:layout_weight="5">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:id="@+id/favouritesHeader"
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold"
+                    android:text="@string/favouritesHeader">
+                </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="25">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/recyclerview_gallery_favorites">
+                </androidx.recyclerview.widget.RecyclerView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:id="@+id/galleryHeader"
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold"
+                    android:text="@string/galleryHeader">
+                </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="65">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/recyclerview_gallery_images">
+                </androidx.recyclerview.widget.RecyclerView>
+
+        </LinearLayout>
     
-</RelativeLayout>
+</LinearLayout>
