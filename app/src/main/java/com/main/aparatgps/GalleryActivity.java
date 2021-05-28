@@ -68,8 +68,9 @@ public class GalleryActivity extends AppCompatActivity {
         favouritesView.setHasFixedSize(true);
         favouritesView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 4));
         images = ImageGallery.listOfImages(this);
-        favourites = loadFavourites(images);
-        Log.e("Favourites: ", Integer.toString(favourites.size()));
+        //favourites = loadFavourites(images);
+        favourites = ImageGallery.listOfFavoritesImages(this);
+        //Log.e("Favourites: ", Integer.toString(favourites.size()));
         galleryAdapter = new GalleryAdapter(getApplicationContext(), images, new GalleryAdapter.PhotoListener() {
             @Override
             public void onPhotoClick(String path) {
