@@ -1,6 +1,5 @@
 package com.main.aparatgps;
 
-import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -9,81 +8,86 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.main.aparatgps.photo.DatabaseHelper;
 import com.main.aparatgps.photo.PhotoActivity;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
-public class GalleryActivity extends AppCompatActivity {
+public class FavouritesActivity extends AppCompatActivity {
 
-    RecyclerView recyclerView;
-    GalleryAdapter galleryAdapter;
+    RecyclerView favouritesView;
+    GalleryAdapter favouritesAdapter;
     List<String> images;
-    Button favouritesActivityButton;
+    List<String> favourites;
+
+    DatabaseHelper dataBaseHelper;
+    SQLiteDatabase db;
 
     private  static final int MY_READ_PERMISSION_CODE = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gallery);
+        setContentView(R.layout.activity_favourites);
 
-        recyclerView = findViewById(R.id.recyclerview_gallery_images);
-
-        favouritesActivityButton = findViewById(R.id.favouritesActivityButton);
+        favouritesView = findViewById(R.id.recyclerview_favorites);
 
         //sprawdzanie permission
         if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(GalleryActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_READ_PERMISSION_CODE);
+            ActivityCompat.requestPermissions(FavouritesActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_READ_PERMISSION_CODE);
         }
         else{
+            dataBaseHelper = new DatabaseHelper(getApplicationContext(), "FavouritePhotos", null, 1);
+            db = dataBaseHelper.getWritableDatabase();
             loadImages();
         }
-
-        favouritesActivityButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), FavouritesActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     private void loadImages(){
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 4));
+        favouritesView.setHasFixedSize(true);
+        favouritesView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 4));
         images = ImageGallery.listOfImages(this);
-        galleryAdapter = new GalleryAdapter(getApplicationContext(), images, new GalleryAdapter.PhotoListener() {
+        favourites = loadFavourites(images);
+        favouritesAdapter = new GalleryAdapter(getApplicationContext(), favourites, new GalleryAdapter.PhotoListener() {
             @Override
             public void onPhotoClick(String path) {
-                // Start new photo activity
                 Intent intent = new Intent(getApplicationContext(), PhotoActivity.class);
                 intent.putExtra("path", path);
                 startActivity(intent);
-
-                //do something with photo
             }
 
             @Override
             public void onLongPhotoClick(String path) {
-                Log.i("long click", path);
+
             }
         });
 
-        recyclerView.setAdapter(galleryAdapter);
+        favouritesView.setAdapter(favouritesAdapter);
+    }
+
+    public List<String> loadFavourites(List<String> images){
+        List<String> favourites = new ArrayList<String>();
+        boolean hasNext = true;
+        Cursor cursor = db.query("FavouritePhotos", new String[]{"_ID", "Absolute_Path"}, null, null, null, null, null);
+        if(cursor.moveToFirst()){
+            while(hasNext){
+                favourites.add(cursor.getString(1));
+                if(cursor.isLast()){
+                    hasNext=false;
+                }
+            }
+        }
+        return favourites;
     }
 
     @Override
@@ -107,11 +111,11 @@ public class GalleryActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        recyclerView = findViewById(R.id.recyclerview_gallery_images);
+        favouritesView = findViewById(R.id.recyclerview_favorites);
 
         //sprawdzanie permission
         if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(GalleryActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_READ_PERMISSION_CODE);
+            ActivityCompat.requestPermissions(FavouritesActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_READ_PERMISSION_CODE);
         }
         else{
             loadImages();

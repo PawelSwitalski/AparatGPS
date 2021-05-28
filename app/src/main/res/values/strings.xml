@@ -4,6 +4,7 @@
     <string name="saveNote">Save note</string>
     <string name="favouritesHeader">Favourites</string>
     <string name="galleryHeader">All photos</string>
+    <string name="favouritesButton">Favourites</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
